@@ -1,0 +1,45 @@
+# ==============================================================================
+# EventEase — Kubernetes Services Manifest
+# Provides internal ClusterIP networking and external NodePort browser access
+# ==============================================================================
+
+# 1. ClusterIP Service: Internal networking within the Kubernetes cluster
+apiVersion: v1
+kind: Service
+metadata:
+  name: eventease-service
+  namespace: eventease
+  labels:
+    app: eventease
+    service: internal
+spec:
+  type: ClusterIP
+  selector:
+    app: eventease
+  ports:
+    - name: http
+      port: 5000
+      targetPort: 5000
+      protocol: TCP
+
+---
+
+# 2. NodePort Service: Exposes EventEase on nodePort 30080 for host browser access
+apiVersion: v1
+kind: Service
+metadata:
+  name: eventease-nodeport-service
+  namespace: eventease
+  labels:
+    app: eventease
+    service: external-nodeport
+spec:
+  type: NodePort
+  selector:
+    app: eventease
+  ports:
+    - name: http
+      port: 5000
+      targetPort: 5000
+      nodePort: 30080
+      protocol: TCP

@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}My Registrations — EventEase{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <div class="d-flex align-items-center gap-2">
+                <span class="badge bg-success text-uppercase px-2 py-1">Student Portal</span>
+                <span class="text-muted small">&bull; My Bookings</span>
+            </div>
+            <h2 class="fw-bold mb-0">My Event Registrations</h2>
+        </div>
+        <div>
+            <a href="{{ url_for('events') }}" class="btn btn-primary-custom btn-sm">
+                <i class="bi bi-search me-1"></i> Explore More Events
+            </a>
+        </div>
+    </div>
+
+    <!-- Registrations List -->
+    <div class="card card-modern p-4">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0 small">
+                <thead class="table-light">
+                    <tr>
+                        <th>Pass Code</th>
+                        <th>Event Name</th>
+                        <th>Date & Timing</th>
+                        <th>Venue</th>
+                        <th>Registration Status</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reg in registrations %}
+                        <tr>
+                            <td class="font-monospace fw-bold text-primary">
+                                {{ reg.registration_code }}
+                            </td>
+                            <td>
+                                <a href="{{ url_for('event_detail', event_id=reg.event_id) }}" class="fw-bold text-dark text-decoration-none">
+                                    {{ reg.title }}
+                                </a>
+                                <div class="text-muted small">
+                                    <span class="category-pill">{{ reg.category }}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div>{{ reg.date }}</div>
+                                <div class="text-muted small">{{ reg.start_time }} - {{ reg.end_time }}</div>
+                            </td>
+                            <td>
+                                <span class="text-muted">{{ reg.venue }}</span>
+                            </td>
+                            <td>
+                                {% if reg.reg_status == 'Confirmed' %}
+                                    <span class="badge bg-success-subtle text-success border border-success-subtle">
+                                        <i class="bi bi-check-circle me-1"></i>Confirmed
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle">
+                                        <i class="bi bi-x-circle me-1"></i>Cancelled
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td class="text-end">
+                                {% if reg.reg_status == 'Confirmed' %}
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="{{ url_for('registration_success', reg_code=reg.registration_code) }}" class="btn btn-outline-primary" title="View Digital Pass">
+                                            <i class="bi bi-qr-code me-1"></i> Pass
+                                        </a>
+                                        <form method="POST" action="{{ url_for('cancel_registration', reg_id=reg.registration_id) }}" class="d-inline delete-confirm" data-item-name="your registration for {{ reg.title }}">
+                                            <button type="submit" class="btn btn-outline-danger" title="Cancel Booking">
+                                                <i class="bi bi-x-circle"></i> Cancel
+                                            </button>
+                                        </form>
+                                    </div>
+                                {% else %}
+                                    <span class="text-muted small">Cancelled</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="6" class="text-center py-5">
+                                <i class="bi bi-ticket-perforated text-muted display-4 mb-3"></i>
+                                <h5 class="text-muted">You have not registered for any events yet.</h5>
+                                <p class="small text-muted mb-3">Discover conferences, workshops, and student competitions happening across campus.</p>
+                                <a href="{{ url_for('events') }}" class="btn btn-primary-custom btn-sm">
+                                    Discover Upcoming Events
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

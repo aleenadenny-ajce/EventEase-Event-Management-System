@@ -1,0 +1,79 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  EventEase — AWS Serverless Application Model (SAM) Template
+  Deploys the Event Notification and Registration Summary Lambda Service
+  with HTTP API Gateway integration and an S3 bucket for assets.
+
+Globals:
+  Function:
+    Timeout: 10
+    MemorySize: 128
+    Runtime: python3.12
+    Architectures:
+      - x86_64
+    Environment:
+      Variables:
+        STAGE: prod
+        ORGANIZATION_NAME: "EventEase Campus Hub"
+        SUPPORT_EMAIL: "support@eventease.local"
+
+Resources:
+  # =========================================================
+  # Lambda Function: Notification and Summary Engine
+  # =========================================================
+  EventNotificationFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: eventease-notification-service
+      Description: Ingests registration confirmations and broadcasts schedule notifications
+      CodeUri: .
+      Handler: lambda_function.lambda_handler
+      Policies:
+        - AWSLambdaBasicExecutionRole
+      Events:
+        # Route 1: POST /notifications/summary
+        RegistrationSummaryApi:
+          Type: HttpApi
+          Properties:
+            Path: /notifications/summary
+            Method: POST
+
+        # Route 2: GET /notifications/health
+        HealthPingApi:
+          Type: HttpApi
+          Properties:
+            Path: /notifications/health
+            Method: GET
+
+  # =========================================================
+  # S3 Bucket for Event Posters & Digital Ticket Storage
+  # =========================================================
+  EventEaseMediaBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "eventease-media-${AWS::AccountId}-${AWS::Region}"
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      VersioningConfiguration:
+        Status: Enabled
+
+Outputs:
+  HttpApiUrl:
+    Description: "HTTP API Gateway endpoint URL for EventEase Notification Service"
+    Value: !Sub "https://${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com"
+
+  NotificationFunctionArn:
+    Description: "Lambda Function ARN"
+    Value: !GetAtt EventNotificationFunction.Arn
+
+  MediaBucketName:
+    Description: "S3 Bucket Name for EventEase Artifacts"
+    Value: !Ref EventEaseMediaBucket

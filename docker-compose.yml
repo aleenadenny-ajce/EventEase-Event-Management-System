@@ -1,0 +1,33 @@
+version: '3.8'
+
+# ==============================================================================
+# EventEase — Docker Compose Configuration
+# Orchestrates local container execution with persistent data volumes
+# ==============================================================================
+
+services:
+  eventease-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: eventease:v1.0
+    container_name: eventease-app
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=production
+      - SECRET_KEY=eventease-dev-docker-secret-key-32bytes-bca2026
+      - PORT=5000
+      - HOST=0.0.0.0
+    volumes:
+      # Persist SQLite database file on the host machine
+      - ./database:/app/database
+      # Persist user-uploaded event posters on the host machine
+      - ./static/uploads:/app/static/uploads
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5000/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s

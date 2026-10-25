@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: eventease
+  labels:
+    app.kubernetes.io/name: eventease
+    app.kubernetes.io/part-of: eventease-system
+    environment: practical-lab

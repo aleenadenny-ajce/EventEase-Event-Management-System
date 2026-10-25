@@ -1,0 +1,247 @@
+{% extends "base.html" %}
+
+{% block title %}EventEase — Discover, Manage & Attend Campus Events{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-gradient text-center text-lg-start py-5">
+    <div class="container py-lg-4">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7">
+                <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill bg-white bg-opacity-10 text-white mb-3 small border border-white border-opacity-20">
+                    <i class="bi bi-stars text-warning"></i>
+                    <span>College Microproject: Cloud Computing & Virtualization</span>
+                </div>
+                <h1 class="display-4 fw-extrabold text-white mb-3 lh-sm">
+                    Streamlined Campus & Tech <span class="text-primary text-decoration-underline" style="text-decoration-color: #06b6d4 !important;">Event Management</span>
+                </h1>
+                <p class="lead text-light text-opacity-75 mb-4">
+                    EventEase empowers administrators, faculty organizers, and students to seamlessly organize, track, and register for technical summits, workshops, hackathons, and cultural festivals.
+                </p>
+                <div class="d-flex flex-wrap gap-3 justify-content-center justify-content-lg-start">
+                    <a href="{{ url_for('events') }}" class="btn btn-primary-custom btn-lg px-4 py-2">
+                        <i class="bi bi-search me-2"></i>Explore All Events
+                    </a>
+                    {% if not current_user.is_authenticated %}
+                        <a href="{{ url_for('register') }}" class="btn btn-outline-light btn-lg px-4 py-2">
+                            <i class="bi bi-person-plus me-2"></i>Get Started Free
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('dashboard') }}" class="btn btn-outline-light btn-lg px-4 py-2">
+                            <i class="bi bi-speedometer2 me-2"></i>Go to Dashboard
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <!-- Demo Accounts Card for College Examiners -->
+                <div class="card bg-white text-dark border-0 shadow-lg rounded-4 p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+                        <h5 class="fw-bold mb-0 text-dark">
+                            <i class="bi bi-key-fill text-warning me-2"></i>Demo Evaluation Logins
+                        </h5>
+                        <span class="badge bg-primary-subtle text-primary">Testing Ready</span>
+                    </div>
+                    <div class="table-responsive small">
+                        <table class="table table-sm table-borderless align-middle mb-0">
+                            <thead>
+                                <tr class="text-muted border-bottom">
+                                    <th>Role</th>
+                                    <th>Email</th>
+                                    <th>Password</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="badge bg-danger">Admin</span></td>
+                                    <td><code>admin@eventease.local</code></td>
+                                    <td><code>Admin@Password123</code></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge bg-primary">Organizer</span></td>
+                                    <td><code>organizer@eventease.local</code></td>
+                                    <td><code>Organizer@Password123</code></td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge bg-success">Participant</span></td>
+                                    <td><code>participant@eventease.local</code></td>
+                                    <td><code>User@Password123</code></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="mt-3 pt-2 border-top text-center">
+                        <a href="{{ url_for('login') }}" class="btn btn-outline-primary btn-sm w-100 fw-semibold">
+                            <i class="bi bi-box-arrow-in-right me-1"></i> Quick Sign In With Test Account
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Metrics Bar -->
+<section class="py-4 bg-white border-bottom shadow-sm">
+    <div class="container">
+        <div class="row g-4 text-center">
+            <div class="col-md-4 col-sm-12">
+                <div class="p-2">
+                    <h2 class="display-6 fw-bold text-primary mb-0">{{ stats.events }}</h2>
+                    <p class="text-muted small fw-medium text-uppercase mb-0">Active & Published Events</p>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-12 border-start-md">
+                <div class="p-2">
+                    <h2 class="display-6 fw-bold text-success mb-0">{{ stats.registrations }}</h2>
+                    <p class="text-muted small fw-medium text-uppercase mb-0">Confirmed Registrations</p>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-12 border-start-md">
+                <div class="p-2">
+                    <h2 class="display-6 fw-bold text-info mb-0">{{ stats.participants }}</h2>
+                    <p class="text-muted small fw-medium text-uppercase mb-0">Registered Students & Guests</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Upcoming Events -->
+<section class="py-5">
+    <div class="container">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-2">
+            <div>
+                <h3 class="fw-bold mb-1">Featured Upcoming Events</h3>
+                <p class="text-muted mb-0">Explore campus workshops, technical summits, and competitions</p>
+            </div>
+            <div>
+                <a href="{{ url_for('events') }}" class="btn btn-outline-primary btn-sm fw-semibold">
+                    View All Events <i class="bi bi-arrow-right ms-1"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Categories Pill Bar -->
+        <div class="d-flex flex-wrap gap-2 mb-4">
+            <a href="{{ url_for('events') }}" class="badge bg-primary text-white text-decoration-none px-3 py-2 rounded-pill">
+                All Categories
+            </a>
+            {% for cat in categories %}
+                <a href="{{ url_for('events', category=cat) }}" class="badge bg-white text-secondary border text-decoration-none px-3 py-2 rounded-pill shadow-xs">
+                    {{ cat }}
+                </a>
+            {% endfor %}
+        </div>
+
+        <!-- Event Cards Grid -->
+        <div class="row g-4">
+            {% if featured_events %}
+                {% for ev in featured_events %}
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card card-modern h-100 d-flex flex-column">
+                            <div class="card-body p-4 d-flex flex-column">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <span class="category-pill">{{ ev.category }}</span>
+                                    <span class="badge-status badge-upcoming">
+                                        <i class="bi bi-circle-fill" style="font-size: 0.5rem;"></i> {{ ev.status }}
+                                    </span>
+                                </div>
+                                <h5 class="card-title fw-bold text-dark mt-2 mb-2 lh-base">
+                                    <a href="{{ url_for('event_detail', event_id=ev.id) }}" class="text-dark text-decoration-none hover-primary">
+                                        {{ ev.title }}
+                                    </a>
+                                </h5>
+                                <p class="card-text text-muted small flex-grow-1">
+                                    {{ ev.description[:110] }}{% if ev.description|length > 110 %}...{% endif %}
+                                </p>
+
+                                <div class="border-top pt-3 mt-3">
+                                    <div class="d-flex align-items-center text-muted small mb-2">
+                                        <i class="bi bi-calendar-event text-primary me-2"></i>
+                                        <span>{{ ev.date }} &bull; {{ ev.start_time }} - {{ ev.end_time }}</span>
+                                    </div>
+                                    <div class="d-flex align-items-center text-muted small mb-3">
+                                        <i class="bi bi-geo-alt text-danger me-2"></i>
+                                        <span class="text-truncate">{{ ev.venue }}</span>
+                                    </div>
+
+                                    <div class="d-flex align-items-center justify-content-between pt-2">
+                                        <div>
+                                            <span class="small fw-semibold {% if ev.remaining_seats <= 5 %}text-danger{% else %}text-success{% endif %}">
+                                                <i class="bi bi-person-check me-1"></i>{{ ev.remaining_seats }} seats left
+                                            </span>
+                                        </div>
+                                        <a href="{{ url_for('event_detail', event_id=ev.id) }}" class="btn btn-sm btn-outline-primary fw-semibold">
+                                            View Details
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12 text-center py-5">
+                    <i class="bi bi-calendar-x text-muted display-4 mb-3"></i>
+                    <h5 class="text-muted">No upcoming events scheduled at this moment.</h5>
+                    <p class="small text-muted">Check back soon or create one from your organizer portal.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<!-- Cloud & Architecture Highlights Section -->
+<section class="py-5 bg-white border-top">
+    <div class="container">
+        <div class="text-center max-w-700 mx-auto mb-5">
+            <span class="badge bg-primary-subtle text-primary px-3 py-1 rounded-pill fw-semibold text-uppercase small">Lab Architecture</span>
+            <h3 class="fw-bold mt-2">Engineered for Cloud Computing & Virtualization</h3>
+            <p class="text-muted">Demonstrating practical modularity across hypervisors, containerization, orchestration, and serverless backends.</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-3">
+                <div class="p-4 rounded-3 border bg-light h-100">
+                    <div class="metric-icon bg-primary-subtle text-primary mb-3">
+                        <i class="bi bi-cpu"></i>
+                    </div>
+                    <h5 class="fw-bold">Virtualization</h5>
+                    <p class="small text-muted mb-0">Type-1/Type-2 hypervisors, VirtualBox/KVM comparison, snapshots, hardware isolation, and virtual disk provisioning.</p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="p-4 rounded-3 border bg-light h-100">
+                    <div class="metric-icon bg-info-subtle text-info mb-3">
+                        <i class="bi bi-box-seam"></i>
+                    </div>
+                    <h5 class="fw-bold">Docker Packaging</h5>
+                    <p class="small text-muted mb-0">Lightweight OCI-compliant container image with health check probe, unprivileged execution, and volume persistence.</p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="p-4 rounded-3 border bg-light h-100">
+                    <div class="metric-icon bg-success-subtle text-success mb-3">
+                        <i class="bi bi-diagram-3"></i>
+                    </div>
+                    <h5 class="fw-bold">Kubernetes</h5>
+                    <p class="small text-muted mb-0">Minikube manifests covering Deployments, ClusterIP & NodePort Services, ConfigMaps, Secrets, and rolling updates.</p>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="p-4 rounded-3 border bg-light h-100">
+                    <div class="metric-icon bg-warning-subtle text-warning mb-3">
+                        <i class="bi bi-cloud-lightning"></i>
+                    </div>
+                    <h5 class="fw-bold">AWS Serverless</h5>
+                    <p class="small text-muted mb-0">Stateless AWS Lambda handler + API Gateway template for event registration confirmations and notification triggers.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

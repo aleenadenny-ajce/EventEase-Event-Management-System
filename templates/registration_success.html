@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Registration Confirmed — EventEase{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <!-- Digital Pass Card -->
+            <div class="registration-pass p-4 p-md-5 mb-4">
+                <div class="text-center mb-4 pb-3 border-bottom">
+                    <span class="badge bg-success-subtle text-success fs-6 px-3 py-1 rounded-pill mb-2">
+                        <i class="bi bi-patch-check-fill me-1"></i> Registration Confirmed
+                    </span>
+                    <h3 class="fw-bold mb-1 text-dark">Event Admission Pass</h3>
+                    <p class="text-muted small">Show this digital pass or registration code at the entrance desk.</p>
+                </div>
+
+                <div class="row g-4 mb-4 align-items-center">
+                    <div class="col-md-7">
+                        <div class="mb-3">
+                            <span class="category-pill">{{ reg.category }}</span>
+                            <h4 class="fw-bold text-dark mt-2 mb-1">{{ reg.title }}</h4>
+                        </div>
+                        <div class="small text-muted d-flex flex-column gap-2">
+                            <div><i class="bi bi-person text-primary me-2"></i><strong>Attendee:</strong> {{ reg.user_name }}</div>
+                            <div><i class="bi bi-envelope text-primary me-2"></i><strong>Email:</strong> {{ reg.user_email }}</div>
+                            <div><i class="bi bi-calendar3 text-primary me-2"></i><strong>Date & Time:</strong> {{ reg.date }} ({{ reg.start_time }} - {{ reg.end_time }})</div>
+                            <div><i class="bi bi-geo-alt text-danger me-2"></i><strong>Venue:</strong> {{ reg.venue }}</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-5 text-center">
+                        <div class="p-3 bg-light rounded-3 border">
+                            <i class="bi bi-qr-code text-dark" style="font-size: 5rem;"></i>
+                            <div class="small text-muted mt-1">Registration ID</div>
+                            <div class="font-monospace fw-bold fs-5 text-primary">{{ reg.registration_code }}</div>
+                            <div class="badge bg-success small mt-1">Confirmed</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-3 border-top d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2 small text-muted">
+                    <span>Booked on: {{ reg.registration_date }}</span>
+                    <span>EventEase College Cloud Microproject</span>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-center gap-3">
+                <button type="button" class="btn btn-outline-dark" onclick="window.print()">
+                    <i class="bi bi-printer me-1"></i> Print / Save as PDF
+                </button>
+                <a href="{{ url_for('participant_dashboard') }}" class="btn btn-primary-custom">
+                    <i class="bi bi-speedometer2 me-1"></i> My Registrations
+                </a>
+                <a href="{{ url_for('events') }}" class="btn btn-outline-secondary">
+                    Browse More Events
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

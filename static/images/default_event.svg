@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" width="800" height="400">
+  <defs>
+    <linearGradient id="bg_default_event" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b" />
+      <stop offset="100%" stop-color="#4f46e5" />
+    </linearGradient>
+  </defs>
+  <rect width="800" height="400" rx="12" fill="url(#bg_default_event)" />
+  <circle cx="700" cy="80" r="120" fill="#ffffff" fill-opacity="0.05" />
+  <circle cx="100" cy="350" r="180" fill="#ffffff" fill-opacity="0.04" />
+  <rect x="60" y="60" width="120" height="32" rx="16" fill="#ffffff" fill-opacity="0.15" />
+  <text x="120" y="81" font-family="'Inter', sans-serif" font-size="14" font-weight="600" fill="#ffffff" text-anchor="middle">EVENT PASS</text>
+  <text x="60" y="180" font-family="'Inter', sans-serif" font-size="42" font-weight="800" fill="#ffffff">Campus Event</text>
+  <text x="60" y="225" font-family="'Inter', sans-serif" font-size="20" font-weight="400" fill="#e2e8f0">EventEase Unified Management</text>
+  <line x1="60" y1="270" x2="740" y2="270" stroke="#ffffff" stroke-opacity="0.2" stroke-width="2" />
+  <text x="60" y="320" font-family="'Inter', sans-serif" font-size="16" font-weight="500" fill="#94a3b8">EventEase &bull; BCA Cloud Computing Practical Microproject</text>
+</svg>

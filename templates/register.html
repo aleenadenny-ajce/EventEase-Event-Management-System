@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Create Account — EventEase{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card card-modern p-4 p-sm-5">
+                <div class="text-center mb-4">
+                    <div class="metric-icon bg-success-subtle text-success mx-auto mb-3" style="width: 56px; height: 56px;">
+                        <i class="bi bi-person-plus fs-3"></i>
+                    </div>
+                    <h3 class="fw-bold mb-1">Create Account</h3>
+                    <p class="text-muted small">Join EventEase to discover and register for campus events</p>
+                </div>
+
+                <form method="POST" action="{{ url_for('register') }}">
+                    <div class="mb-3">
+                        <label for="name" class="form-label small fw-semibold">Full Name</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0"><i class="bi bi-person text-muted"></i></span>
+                            <input type="text" class="form-control border-start-0" id="name" name="name" value="{{ name or '' }}" placeholder="e.g. John Doe" required autofocus>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label small fw-semibold">Email Address</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0"><i class="bi bi-envelope text-muted"></i></span>
+                            <input type="email" class="form-control border-start-0" id="email" name="email" value="{{ email or '' }}" placeholder="student@college.edu" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label small fw-semibold">Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0"><i class="bi bi-lock text-muted"></i></span>
+                            <input type="password" class="form-control border-start-0" id="password" name="password" placeholder="At least 6 characters" required minlength="6">
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="confirm_password" class="form-label small fw-semibold">Confirm Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0"><i class="bi bi-shield-check text-muted"></i></span>
+                            <input type="password" class="form-control border-start-0" id="confirm_password" name="confirm_password" placeholder="Repeat your password" required minlength="6">
+                        </div>
+                    </div>
+
+                    <div class="alert alert-light border small text-muted mb-4 py-2">
+                        <i class="bi bi-info-circle text-primary me-1"></i>
+                        New accounts register as <strong>Participant</strong>. Faculty organizer or admin roles can be granted via the Admin dashboard.
+                    </div>
+
+                    <button type="submit" class="btn btn-primary-custom w-100 py-2 fw-semibold">
+                        Complete Registration
+                    </button>
+                </form>
+
+                <div class="text-center mt-4">
+                    <p class="small text-muted mb-0">
+                        Already have an account? 
+                        <a href="{{ url_for('login') }}" class="text-primary fw-semibold text-decoration-none">Sign in here</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

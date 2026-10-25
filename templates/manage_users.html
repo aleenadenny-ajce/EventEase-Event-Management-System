@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}User Management — EventEase{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <div class="d-flex align-items-center gap-2">
+                <span class="badge bg-danger text-uppercase px-2 py-1">Admin Only</span>
+                <span class="text-muted small">&bull; Access Control</span>
+            </div>
+            <h2 class="fw-bold mb-0">Platform User Directory</h2>
+        </div>
+        <div>
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-arrow-left me-1"></i> Back to Admin Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- Search & Filter Card -->
+    <div class="card card-modern p-4 mb-4">
+        <form method="GET" action="{{ url_for('manage_users') }}" class="row g-3">
+            <div class="col-md-6">
+                <label for="q" class="form-label small fw-semibold">Search by Name or Email</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
+                    <input type="text" class="form-control border-start-0" id="q" name="q" value="{{ q }}" placeholder="e.g. priya, admin, student@college.edu">
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <label for="role" class="form-label small fw-semibold">Filter by Role</label>
+                <select class="form-select" id="role" name="role">
+                    <option value="">All Roles</option>
+                    <option value="admin" {% if selected_role == 'admin' %}selected{% endif %}>Administrator</option>
+                    <option value="organizer" {% if selected_role == 'organizer' %}selected{% endif %}>Faculty / Organizer</option>
+                    <option value="participant" {% if selected_role == 'participant' %}selected{% endif %}>Participant / Student</option>
+                </select>
+            </div>
+
+            <div class="col-md-2 d-flex align-items-end gap-2">
+                <button type="submit" class="btn btn-primary-custom w-100">
+                    Filter
+                </button>
+                <a href="{{ url_for('manage_users') }}" class="btn btn-outline-secondary" title="Reset">
+                    <i class="bi bi-arrow-counterclockwise"></i>
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Users Table -->
+    <div class="card card-modern p-4">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0 small">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>User Name</th>
+                        <th>Email Address</th>
+                        <th>Role</th>
+                        <th>Created At</th>
+                        <th class="text-end">Manage Role & Access</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for u in users %}
+                        <tr>
+                            <td>#{{ u.id }}</td>
+                            <td class="fw-bold text-dark">{{ u.name }}</td>
+                            <td><code>{{ u.email }}</code></td>
+                            <td>
+                                {% if u.role == 'admin' %}
+                                    <span class="badge bg-danger">Admin</span>
+                                {% elif u.role == 'organizer' %}
+                                    <span class="badge bg-primary">Organizer</span>
+                                {% else %}
+                                    <span class="badge bg-success">Participant</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-muted">{{ u.created_at }}</td>
+                            <td class="text-end">
+                                <div class="d-inline-flex gap-2 align-items-center">
+                                    <!-- Role Change Form -->
+                                    <form method="POST" action="{{ url_for('manage_users') }}" class="d-inline-flex align-items-center gap-1">
+                                        <input type="hidden" name="action" value="update_role">
+                                        <input type="hidden" name="user_id" value="{{ u.id }}">
+                                        <select name="role" class="form-select form-select-sm" style="width: 120px;" onchange="this.form.submit()">
+                                            <option value="participant" {% if u.role == 'participant' %}selected{% endif %}>Participant</option>
+                                            <option value="organizer" {% if u.role == 'organizer' %}selected{% endif %}>Organizer</option>
+                                            <option value="admin" {% if u.role == 'admin' %}selected{% endif %}>Admin</option>
+                                        </select>
+                                    </form>
+
+                                    <!-- Delete User Form -->
+                                    {% if u.id != current_user.id %}
+                                        <form method="POST" action="{{ url_for('manage_users') }}" class="d-inline delete-confirm" data-item-name="user {{ u.name }} ({{ u.email }})">
+                                            <input type="hidden" name="action" value="delete_user">
+                                            <input type="hidden" name="user_id" value="{{ u.id }}">
+                                            <button type="submit" class="btn btn-outline-danger btn-sm" title="Delete User">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    {% else %}
+                                        <button class="btn btn-light btn-sm text-muted" disabled title="Cannot delete logged-in admin">
+                                            <i class="bi bi-lock"></i>
+                                        </button>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="6" class="text-center py-4 text-muted">
+                                No users found matching filter criteria.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: eventease-config
+  namespace: eventease
+  labels:
+    app: eventease
+    tier: frontend-backend
+data:
+  APP_NAME: "EventEase"
+  APP_ENV: "production"
+  PORT: "5000"
+  HOST: "0.0.0.0"
+  DATABASE_PATH: "database/eventease.db"

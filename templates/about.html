@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block title %}About & Technical Architecture — EventEase{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Header -->
+    <div class="mb-5 text-center text-md-start">
+        <span class="badge bg-primary text-uppercase px-3 py-1 mb-2">BCA Cloud Microproject Record</span>
+        <h2 class="display-6 fw-bold">EventEase Architecture & System Overview</h2>
+        <p class="lead text-muted">
+            A comprehensive, modular web application engineered to demonstrate full-stack cloud computing principles: virtualization, Docker containerization, Kubernetes orchestration, and AWS serverless computing.
+        </p>
+    </div>
+
+    <!-- Modules Grid -->
+    <div class="row g-4 mb-5">
+        <div class="col-lg-6">
+            <div class="card card-modern h-100 p-4">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="metric-icon bg-primary text-white">
+                        <i class="bi bi-layers-half"></i>
+                    </div>
+                    <div>
+                        <h5 class="fw-bold mb-0">Module 1 & 2: Virtualization & VM Automation</h5>
+                        <span class="badge bg-light text-dark border">Hypervisor Layer</span>
+                    </div>
+                </div>
+                <p class="text-muted small">
+                    Investigates Type-1 (bare-metal) vs. Type-2 (hosted) hypervisors. Explains how applications historically ran on physical servers, transitioned to hardware-virtualized environments (VirtualBox/KVM/QEMU), and examines CPU, RAM, disk allocation, snapshots, and automation scripts.
+                </p>
+                <ul class="list-unstyled small text-secondary mb-0">
+                    <li><i class="bi bi-check-circle-fill text-success me-2"></i>VirtualBox VM creation & snapshot workflows for Windows</li>
+                    <li><i class="bi bi-check-circle-fill text-success me-2"></i>KVM / QEMU and <code>virsh</code> CLI commands for Linux systems</li>
+                    <li><i class="bi bi-check-circle-fill text-success me-2"></i>Resource allocation and troubleshooting virtualization bottlenecks</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card card-modern h-100 p-4">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="metric-icon bg-info text-white">
+                        <i class="bi bi-box-seam"></i>
+                    </div>
+                    <div>
+                        <h5 class="fw-bold mb-0">Module 3: Docker Containerization</h5>
+                        <span class="badge bg-light text-dark border">Container Runtime</span>
+                    </div>
+                </div>
+                <p class="text-muted small">
+                    Packages EventEase and its Python dependencies into an immutable, portable Docker container image with non-root security, integrated health probes, and persistent volume mounting.
+                </p>
+                <ul class="list-unstyled small text-secondary mb-0">
+                    <li><i class="bi bi-check-circle-fill text-success me-2"></i>Multi-layer Dockerfile using official Python slim base</li>
+                    <li><i class="bi bi-check-circle-fill text-success me-2"></i>Docker Compose for single-command deployment with volume persistence</li>
+                    <li><i class="bi bi-check-circle-fill text-success me-2"></i>Built-in Docker <code>HEALTHCHECK</code> utilizing the <code>/health</code> endpoint</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card card-modern h-100 p-4">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="metric-icon bg-success text-white">
+                        <i class="bi bi-diagram-3"></i>
+                    </div>
+                    <div>
+                        <h5 class="fw-bold mb-0">Module 4: Kubernetes Orchestration</h5>
+                        <span class="badge bg-light text-dark border">Cluster Orchestration</span>
+                    </div>
+                </div>
+                <p class="text-muted small">
+                    Defines declarative Kubernetes YAML manifests for deploying EventEase onto Minikube or cloud Kubernetes clusters (EKS/GKE/AKS), with automated healing, rolling updates, and scaling.
+                </p>
+                <ul class="list-unstyled small text-secondary mb-0">
+                    <li><i class="bi bi-check-circle-fill text-success me-2"></i>Dedicated Namespace (<code>eventease</code>), ConfigMap, and Secret</li>
+                    <li><i class="bi bi-check-circle-fill text-success me-2"></i>Readiness & Liveness probes targeting <code>/health</code></li>
+                    <li><i class="bi bi-check-circle-fill text-success me-2"></i>NodePort Service for local access and scaling demonstration</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card card-modern h-100 p-4">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="metric-icon bg-warning text-dark">
+                        <i class="bi bi-cloud-lightning-fill"></i>
+                    </div>
+                    <div>
+                        <h5 class="fw-bold mb-0">Module 5: AWS Serverless Computing</h5>
+                        <span class="badge bg-light text-dark border">FaaS & Event Driven</span>
+                    </div>
+                </div>
+                <p class="text-muted small">
+                    Implements an independent AWS Lambda microservice that ingests event registration notifications, validates payload schema, and generates digital confirmation summaries.
+                </p>
+                <ul class="list-unstyled small text-secondary mb-0">
+                    <li><i class="bi bi-check-circle-fill text-success me-2"></i>AWS Lambda Python handler with structured JSON responses</li>
+                    <li><i class="bi bi-check-circle-fill text-success me-2"></i>AWS SAM (Serverless Application Model) <code>template.yaml</code></li>
+                    <li><i class="bi bi-check-circle-fill text-success me-2"></i>Local testing script without requiring active cloud credentials</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tech Stack Summary Table -->
+    <div class="card card-modern p-4">
+        <h5 class="fw-bold mb-3"><i class="bi bi-gear-fill text-primary me-2"></i>Core Technology Stack Specifications</h5>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Tier</th>
+                        <th>Component</th>
+                        <th>Technology Choice</th>
+                        <th>Justification & Role</th>
+                    </tr>
+                </thead>
+                <tbody class="small">
+                    <tr>
+                        <td><span class="badge bg-primary">Presentation</span></td>
+                        <td>Frontend Client</td>
+                        <td>HTML5, CSS3, Bootstrap 5, Chart.js</td>
+                        <td>Responsive, accessible UI with zero build-step overhead for seamless cross-device testing.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge bg-success">Application</span></td>
+                        <td>Web Server & Logic</td>
+                        <td>Python 3 + Flask</td>
+                        <td>Clean, minimalist WSGI framework with robust routing, session management, and Jinja2 templating.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge bg-warning text-dark">Data Storage</span></td>
+                        <td>Relational Database</td>
+                        <td>SQLite 3 + Foreign Keys</td>
+                        <td>Lightweight, zero-configuration ACID database with transactional locks to prevent race conditions during registration.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge bg-info text-dark">Container</span></td>
+                        <td>Packaging</td>
+                        <td>Docker & Docker Compose</td>
+                        <td>Ensures identical runtime across local development, CI pipelines, and cloud clusters.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge bg-secondary">Orchestration</span></td>
+                        <td>Cluster Management</td>
+                        <td>Kubernetes / Minikube</td>
+                        <td>Automated pod restarts, zero-downtime rolling updates, and declarative infrastructure-as-code.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge bg-dark">Serverless</span></td>
+                        <td>Notification Microservice</td>
+                        <td>AWS Lambda + API Gateway</td>
+                        <td>Event-driven scalability with pay-per-execution billing model.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}Create New Event — EventEase{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card card-modern p-4 p-md-5">
+                <div class="d-flex align-items-center gap-3 mb-4 border-bottom pb-3">
+                    <div class="metric-icon bg-primary text-white">
+                        <i class="bi bi-calendar-plus fs-4"></i>
+                    </div>
+                    <div>
+                        <h3 class="fw-bold mb-0">Create New Event</h3>
+                        <p class="text-muted small mb-0">Publish an academic symposium, workshop, or campus festival</p>
+                    </div>
+                </div>
+
+                <form id="eventForm" method="POST" action="{{ url_for('create_event') }}" enctype="multipart/form-data">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label for="title" class="form-label small fw-semibold">Event Title *</label>
+                            <input type="text" class="form-control" id="title" name="title" value="{{ form.get('title', '') }}" placeholder="e.g. National Cloud Computing Summit 2026" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="category" class="form-label small fw-semibold">Category *</label>
+                            <select class="form-select" id="category" name="category" required>
+                                <option value="">Select a Category</option>
+                                {% for cat in categories %}
+                                    <option value="{{ cat }}" {% if form.get('category') == cat %}selected{% endif %}>{{ cat }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="status" class="form-label small fw-semibold">Status *</label>
+                            <select class="form-select" id="status" name="status" required>
+                                <option value="Upcoming" {% if form.get('status', 'Upcoming') == 'Upcoming' %}selected{% endif %}>Upcoming</option>
+                                <option value="Ongoing" {% if form.get('status') == 'Ongoing' %}selected{% endif %}>Ongoing</option>
+                                <option value="Completed" {% if form.get('status') == 'Completed' %}selected{% endif %}>Completed</option>
+                                <option value="Cancelled" {% if form.get('status') == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+                            </select>
+                        </div>
+
+                        <div class="col-12">
+                            <label for="description" class="form-label small fw-semibold">Event Description *</label>
+                            <textarea class="form-control" id="description" name="description" rows="4" placeholder="Detail the event agenda, topics covered, target audience, and prerequisites..." required>{{ form.get('description', '') }}</textarea>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="date" class="form-label small fw-semibold">Event Date *</label>
+                            <input type="date" class="form-control" id="date" name="date" value="{{ form.get('date', '') }}" required>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="start_time" class="form-label small fw-semibold">Start Time *</label>
+                            <input type="time" class="form-control" id="start_time" name="start_time" value="{{ form.get('start_time', '09:00') }}" required>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="end_time" class="form-label small fw-semibold">End Time *</label>
+                            <input type="time" class="form-control" id="end_time" name="end_time" value="{{ form.get('end_time', '17:00') }}" required>
+                        </div>
+
+                        <div class="col-12">
+                            <label for="venue" class="form-label small fw-semibold">Venue / Meeting URL *</label>
+                            <input type="text" class="form-control" id="venue" name="venue" value="{{ form.get('venue', '') }}" placeholder="e.g. Block C Seminar Hall or Zoom Meeting Link" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="capacity" class="form-label small fw-semibold">Maximum Capacity (Seats) *</label>
+                            <input type="number" class="form-control" id="capacity" name="capacity" value="{{ form.get('capacity', '100') }}" min="1" max="10000" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="registration_deadline" class="form-label small fw-semibold">Registration Deadline *</label>
+                            <input type="date" class="form-control" id="registration_deadline" name="registration_deadline" value="{{ form.get('registration_deadline', '') }}" required>
+                        </div>
+
+                        <div class="col-12">
+                            <label for="poster" class="form-label small fw-semibold">Optional Event Banner / Poster</label>
+                            <input class="form-control" type="file" id="poster" name="poster" accept=".jpg,.jpeg,.png,.webp">
+                            <div class="form-text small">Accepted formats: JPG, PNG, WebP (Max 5MB).</div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+                        <a href="{{ url_for('organizer_dashboard') }}" class="btn btn-outline-secondary">
+                            Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary-custom px-4">
+                            <i class="bi bi-check2-circle me-1"></i> Save & Publish Event
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

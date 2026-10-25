@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Control Center — EventEase{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Header -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <div class="d-flex align-items-center gap-2">
+                <span class="badge bg-danger text-uppercase px-2 py-1">Admin Portal</span>
+                <span class="text-muted small">&bull; System Overview</span>
+            </div>
+            <h2 class="fw-bold mb-0">System Administration & Analytics</h2>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{{ url_for('create_event') }}" class="btn btn-primary-custom btn-sm">
+                <i class="bi bi-plus-lg me-1"></i> New Event
+            </a>
+            <a href="{{ url_for('manage_users') }}" class="btn btn-outline-dark btn-sm">
+                <i class="bi bi-people me-1"></i> Manage Users
+            </a>
+        </div>
+    </div>
+
+    <!-- Metrics Cards Row -->
+    <div class="row g-3 mb-4">
+        <div class="col-xl-2 col-md-4 col-6">
+            <div class="card-metric">
+                <div class="metric-icon bg-primary-subtle text-primary">
+                    <i class="bi bi-calendar-event"></i>
+                </div>
+                <div>
+                    <h3 class="fw-bold mb-0">{{ metrics.total_events }}</h3>
+                    <div class="text-muted small">Total Events</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-2 col-md-4 col-6">
+            <div class="card-metric">
+                <div class="metric-icon bg-info-subtle text-info">
+                    <i class="bi bi-clock-history"></i>
+                </div>
+                <div>
+                    <h3 class="fw-bold mb-0">{{ metrics.upcoming_events }}</h3>
+                    <div class="text-muted small">Upcoming</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-2 col-md-4 col-6">
+            <div class="card-metric">
+                <div class="metric-icon bg-success-subtle text-success">
+                    <i class="bi bi-check2-circle"></i>
+                </div>
+                <div>
+                    <h3 class="fw-bold mb-0">{{ metrics.completed_events }}</h3>
+                    <div class="text-muted small">Completed</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-2 col-md-4 col-6">
+            <div class="card-metric">
+                <div class="metric-icon bg-warning-subtle text-warning">
+                    <i class="bi bi-ticket-perforated"></i>
+                </div>
+                <div>
+                    <h3 class="fw-bold mb-0">{{ metrics.total_registrations }}</h3>
+                    <div class="text-muted small">Registrations</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-2 col-md-4 col-6">
+            <div class="card-metric">
+                <div class="metric-icon bg-secondary-subtle text-secondary">
+                    <i class="bi bi-people"></i>
+                </div>
+                <div>
+                    <h3 class="fw-bold mb-0">{{ metrics.total_participants }}</h3>
+                    <div class="text-muted small">Students</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xl-2 col-md-4 col-6">
+            <div class="card-metric">
+                <div class="metric-icon bg-dark-subtle text-dark">
+                    <i class="bi bi-person-badge"></i>
+                </div>
+                <div>
+                    <h3 class="fw-bold mb-0">{{ metrics.total_organizers }}</h3>
+                    <div class="text-muted small">Organizers</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="row g-4 mb-4">
+        <div class="col-lg-5">
+            <div class="card card-modern p-4 h-100">
+                <h6 class="fw-bold text-dark mb-3"><i class="bi bi-pie-chart text-primary me-2"></i>Event Status Distribution</h6>
+                <div style="height: 250px; position: relative;">
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            <div class="card card-modern p-4 h-100">
+                <h6 class="fw-bold text-dark mb-3"><i class="bi bi-bar-chart text-primary me-2"></i>Events by Category</h6>
+                <div style="height: 250px; position: relative;">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tables Row -->
+    <div class="row g-4">
+        <!-- Recent Events Table -->
+        <div class="col-lg-7">
+            <div class="card card-modern p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="fw-bold text-dark mb-0"><i class="bi bi-calendar3 text-primary me-2"></i>Published Events</h6>
+                    <a href="{{ url_for('organizer_dashboard') }}" class="btn btn-outline-primary btn-sm small">Manage All</a>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0 small">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Event Title</th>
+                                <th>Category</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for ev in recent_events %}
+                                <tr>
+                                    <td>
+                                        <a href="{{ url_for('event_detail', event_id=ev.id) }}" class="fw-semibold text-dark text-decoration-none">
+                                            {{ ev.title[:35] }}{% if ev.title|length > 35 %}...{% endif %}
+                                        </a>
+                                    </td>
+                                    <td><span class="category-pill">{{ ev.category }}</span></td>
+                                    <td>{{ ev.date }}</td>
+                                    <td>
+                                        <span class="badge-status {% if ev.status == 'Upcoming' %}badge-upcoming{% elif ev.status == 'Completed' %}badge-completed{% elif ev.status == 'Cancelled' %}badge-cancelled{% else %}badge-ongoing{% endif %}" style="font-size: 0.7rem; padding: 2px 8px;">
+                                            {{ ev.status }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('edit_event', event_id=ev.id) }}" class="btn btn-sm btn-outline-secondary py-0 px-2" title="Edit">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted py-3">No events recorded.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Registrations Table -->
+        <div class="col-lg-5">
+            <div class="card card-modern p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="fw-bold text-dark mb-0"><i class="bi bi-clock-history text-primary me-2"></i>Recent Registrations</h6>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0 small">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Code</th>
+                                <th>Participant</th>
+                                <th>Event</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for reg in recent_registrations %}
+                                <tr>
+                                    <td class="font-monospace text-primary fw-bold">{{ reg.registration_code }}</td>
+                                    <td>
+                                        <div class="fw-semibold">{{ reg.user_name }}</div>
+                                        <div class="text-muted" style="font-size: 0.72rem;">{{ reg.user_email }}</div>
+                                    </td>
+                                    <td class="text-truncate" style="max-width: 130px;" title="{{ reg.event_title }}">
+                                        {{ reg.event_title }}
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="3" class="text-center text-muted py-3">No registrations found.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+window.chartData = {
+    status: {{ status_dist | tojson }},
+    category: {{ category_dist | tojson }}
+};
+</script>
+{% endblock %}
